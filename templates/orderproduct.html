@@ -1,0 +1,111 @@
+{% extends "basic.html" %}
+
+{% block title %}Oreder The Produt{% endblock title %}
+
+{% block style %}
+    .productinfo{
+        height: 250px;
+        background: #f7f7f7a8;
+        position: absolute;
+        width: 550px;
+        top: 200px;
+        left: 50px;
+        border-radius: 10px;
+        padding: 20px;
+
+    text-align: center;
+    }
+    .orderinfo{
+        height: auto;
+        background: #323049d9;
+        width: 550px;
+        position: absolute;
+        top: 200px;
+        right: 50px;
+        border-radius: 10px;
+    }
+    .odrbtn{
+        position: absolute;
+        top: 80px;
+        right: 165px;
+        height: 50px;
+        font-size: 25px;
+    }
+
+    .input{
+        width: 430px;
+        height: 50px;
+        font-size: 18px;
+        margin-left: 65px;
+        display: inherit;
+        margin-top: 7px;
+        border: 5px double;
+        border-radius: 10px;
+        padding: 10px;
+    }
+    .inputlabel{
+        color: aliceblue;
+        display: inline;
+        margin-left: 63px;
+        font-size: 20px;
+    }
+    .signupbanner{
+        text-align: center;
+        padding: 20px;
+        color: #ffffffd6;
+    }
+    .subbtn{
+        width: 200px;
+        height: 50px;
+        font-size: 25px;
+        margin: 15px;
+        margin-left: 185px;
+        border: 5px double black;
+        border-radius: 10px;
+    }
+{% endblock style %}
+
+{% block username %}
+    {% if user.id == None %}
+        <a class="nav-link " href="{% url 'home' %}"><button type="button" class="btn btn-success">Login</button></a>
+    {% else %}
+    <a class="nav-link " href="{% url 'logout' %}"><button type="button" class="btn btn-success">{{user.name}}</button></a>
+    {% endif %}
+{% endblock username %}
+
+{% block body %}
+<div class="productinfo">
+    <h2>Product Details</h2><hr>
+    <h3>{{product.product_name}}</h3>
+    <h4>Price: {{product.price}}</h4>
+    <h4>Manufacturer: Shantotech Ltd</h4>
+</div>
+
+<div class="orderinfo">
+    {% if user.id == None %}
+        <a href="{% url 'signup' %}"><button type="button" class="btn btn-success odrbtn">Order Now</button></a>
+    {% else %}
+        <div class="orderform">
+            <h3 class="signupbanner"> Order Details</h3><hr>
+            
+            <form action="" method="POST">
+                {% csrf_token %}
+                <label for="" class="inputlabel">Address:</label>
+                {{form.address}}
+                <label for="" class="inputlabel">Contact</label>
+                {{form.contact}}
+                <label for="" class="inputlabel">Select Payment Method:</label>
+                <select id="cars" name="payment" class="input">
+                    <option value="cash">Cash On Delivary</option>
+                    <option value="bKash">bKash</option>
+                    <option value="Rocket">Rocket</option>
+                    <option value="Card">Visa Card</option>
+                </select>
+
+                <input type="submit" value="Place Order" class="subbtn">
+                
+            </form>
+        </div>
+    {% endif %}
+</div>
+{% endblock body %}

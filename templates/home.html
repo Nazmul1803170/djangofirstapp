@@ -1,0 +1,105 @@
+{% extends 'basic.html' %}
+
+{% block title %}Home{% endblock title %}
+
+{% block style %}
+    body{
+        overflow: hidden;
+    }
+    .bottomright {
+        position: absolute;
+        bottom: 125px;
+        right: 200px;
+        font-size: 30px;
+        padding: 15px;
+        border: 5px double #2834ab;
+        border-radius: 10px;
+        font-family: cursive;
+        box-shadow: 1px 1px 10px 10px lightblue;
+        animation-name: example2;
+        animation-duration: 5s;
+    }
+
+    .loginform{
+        background: #efefef36;
+        height: 475px;
+        width: 450px;
+        top: 130px;
+        position: relative;
+        left: 48px;
+        border-radius: 10px;
+        animation-name: example3;
+        animation-duration: 5s;
+    }
+    .input{
+        width: 320px;
+        height: 50px;
+        font-size: 18px;
+        margin-left: 65px;
+        display: inherit;
+        margin-top: 7px;
+        border: 5px double;
+        border-radius: 10px;
+        padding: 10px;
+    }
+    .inputlabel{
+        color: aliceblue;
+        display: inherit;
+        margin-left: 63px;
+        font-size: 20px;
+    }
+    .fgpass{
+        color: aliceblue;
+        display: inherit;
+        margin-left: 85px;
+        font-size: 17px;
+        text-decoration: none;
+    }
+    .rgbtn{
+        color: white;
+        display: inherit;
+        margin-left: 168px;
+        font-size: 20px;
+        text-decoration: none;
+        background: #5f4444;
+        position: absolute;
+        padding: 3px;
+        border-radius: 5px;
+    }
+    .loginbanner{
+        text-align: center;
+        padding: 20px;
+        color: #ffffffd6;
+    }
+    .subbtn{
+        width: 200px;
+        height: 50px;
+        font-size: 25px;
+        margin: 15px;
+        margin-left: 125px;
+        border: 5px double black;
+        border-radius: 10px;
+    }
+
+{% endblock style %}
+
+
+
+{% block body %}
+<div class="loginform">
+    <h2 class="loginbanner">Login Form</h2>
+    
+    <form action="{% url 'login' %}" method="POST">
+        {% csrf_token %}
+        <label for="" class="inputlabel">Username:</label>
+        <input type="text" name="username" class="input" placeholder="Enter username">
+        <label for="" class="inputlabel">Password:</label>
+        <input type="password" name="password" class="input" placeholder="Enter password">
+        <a href="" class="fgpass">Forget Password?</a>
+        <input type="submit" class="subbtn" value="Login">
+        <a href="{% url 'signup' %}" class="rgbtn">Register now</a>
+    </form>
+</div>
+
+
+{% endblock body %}

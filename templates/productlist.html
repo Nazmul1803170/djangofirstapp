@@ -1,0 +1,54 @@
+{% extends 'basic.html' %}
+{% block title %}Product List{% endblock title %}
+{% block style %}
+    .listtable{
+        background: #9a99b8;
+        height: auto;
+        width: 1000px;
+        position: absolute;
+        right: 40px;
+        top: 150px;
+        border-radius: 5px;
+        padding: 10px;
+        font-size:20px;
+    }
+
+{% endblock style %}
+
+{% block username %}
+    {% if user.id == None %}
+        <a class="nav-link " href="{% url 'home' %}"><button type="button" class="btn btn-success">Login</button></a>
+    {% else %}
+    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+        <a class="nav-link " href="/product/userprofile/{{user.pk}}"><button type="button" class="btn btn-success">{{user.name}}</button></a>
+        <a class="nav-link " href="{% url 'logout' %}"><button type="button" class="btn btn-danger">Logout</button></a>
+    </div>
+    {% endif %}
+{% endblock username %}
+
+{% block body %}
+    <div class="listtable">
+        <h2>Available Product</h2>
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Product ID</th>
+                <th scope="col">Product Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Buy Now</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for product in products %}
+                <tr>
+                    <td>{{product.product_id}}</td>
+                    <td>{{product.product_name}}</td>
+                    <td>{{product.price}}</td>
+                    <td><a href="/product/orderproduct/{{product.pk}}"><button type="button" class="btn btn-success">Buy Now</button></a></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+    </div>
+
+{% endblock body %}

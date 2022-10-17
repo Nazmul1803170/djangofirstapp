@@ -1,0 +1,75 @@
+{% extends 'basic.html' %}
+
+{% block title %}Home{% endblock title %}
+
+{% block style %}
+    body{
+        overflow: scroll;
+    }
+    .signupform{
+        background: #1e2439a3;
+        height: 850px;
+        width: 570px;
+        position: relative;
+        top: 110px;
+        left: 470px;
+        border-radius:10px;
+    }
+    .input{
+        width: 430px;
+        height: 50px;
+        font-size: 18px;
+        margin-left: 65px;
+        display: inherit;
+        margin-top: 7px;
+        border: 5px double;
+        border-radius: 10px;
+        padding: 10px;
+    }
+    .inputlabel{
+        color: aliceblue;
+        display: inline;
+        margin-left: 63px;
+        font-size: 20px;
+    }
+    .signupbanner{
+        text-align: center;
+        padding: 20px;
+        color: #ffffffd6;
+    }
+    .subbtn{
+        width: 200px;
+        height: 50px;
+        font-size: 25px;
+        margin: 15px;
+        margin-left: 185px;
+        border: 5px double black;
+        border-radius: 10px;
+    }
+
+{% endblock style %}
+
+{% block body %}
+<div class="signupform">
+    <h2 class="signupbanner">Registration Form</h2>
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        <label for="" class="inputlabel">Full Name:</label>
+        {{form.name}}
+        <label for="" class="inputlabel">Contact No:</label>
+        {{form.contact}}
+        <label for="" class="inputlabel">Email:</label>
+        {{form.email}}
+        <label for="" class="inputlabel">Username:</label>
+        {{form.username}}
+        <label for="" class="inputlabel">Password:</label>
+        {{form.password1}}
+        <label for="" class="inputlabel">Confirm Password:</label>
+        {{form.password2}}
+        <input type="submit" value="Register" class="subbtn">
+
+      </form>
+  </div>
+
+{% endblock body %}

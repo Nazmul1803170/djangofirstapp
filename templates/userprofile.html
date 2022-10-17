@@ -1,0 +1,86 @@
+{% extends 'basic.html' %}
+{% block title %}Profile{% endblock title %}
+
+{% block username %}
+    {% if user.id == None %}
+        <a class="nav-link " href="{% url 'home' %}"><button type="button" class="btn btn-success">Login</button></a>
+    {% else %}
+    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+        <a class="nav-link " href="/product/userprofile/{{user.pk}}"><button type="button" class="btn btn-success">{{user.name}}</button></a>
+        <a class="nav-link " href="{% url 'logout' %}"><button type="button" class="btn btn-danger">Logout</button></a>
+    </div>
+    {% endif %}
+{% endblock username %}
+
+{% block style %}
+    .listtable{
+        background: #9a99b8;
+        height: auto;
+        width: 700px;
+        position: absolute;
+        right: 40px;
+        top: 150px;
+        border-radius: 5px;
+        padding: 10px;
+        font-size:20px;
+    }
+    .linked{
+        background: #9a99b8;
+        height: auto;
+        width: 600px;
+        position: absolute;
+        left: 40px;
+        top: 150px;
+        border-radius: 5px;
+        padding: 10px;
+        font-size:20px;
+    }
+{% endblock style %}
+
+{% block body %}
+    <div class="linked">
+        <h2>Linked Device</h2><hr>
+        {% if user.product_id is None %}
+            <h3>No Device connected.</h3>
+            <a href="{% url 'getstart' %}"><button type="button" class="btn btn-primary">Cennect Device</button></a>
+        {% else %}
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Product ID</th>
+                    <th scope="col">View</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>IoT Based Home Surveillance System</td>
+                        <td>{{user.product_id}}</td>
+                        <td><a href="/accounts/dashboard/{{user.pk}}"><button type="button" class="btn btn-primary">Dashboard</button></a></td>
+                    </tr>
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+    <div class="listtable">
+        <h2>Ordered Product</h2>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Product Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Current Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for product in ordered_product %}
+                <tr>
+                    <td>{{product.name}}</td>
+                    <td>{{product.price}}</td>
+                    <td><a href="/product/orderproduct/{{product.pk}}"><button type="button" class="btn btn-warning">{{product.status}}</button></a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock body %}

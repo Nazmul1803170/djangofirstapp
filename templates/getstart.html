@@ -1,0 +1,83 @@
+{% extends 'basic.html' %}
+
+{% block title %}Home{% endblock title %}
+
+{% block style %}
+    body{
+        overflow: scroll;
+    }
+    .signupform{
+        background: #1e2439a3;
+        height: 850px;
+        width: 570px;
+        position: relative;
+        top: 110px;
+        left: 470px;
+        border-radius:10px;
+    }
+    .input{
+        width: 430px;
+        height: 50px;
+        font-size: 18px;
+        margin-left: 65px;
+        display: inherit;
+        margin-top: 7px;
+        border: 5px double;
+        border-radius: 10px;
+        padding: 10px;
+    }
+    .inputlabel{
+        color: aliceblue;
+        display: inline;
+        margin-left: 63px;
+        font-size: 20px;
+    }
+    .signupbanner{
+        text-align: center;
+        padding: 20px;
+        color: #ffffffd6;
+    }
+    .subbtn{
+        width: 200px;
+        height: 50px;
+        font-size: 25px;
+        margin: 15px;
+        margin-left: 185px;
+        border: 5px double black;
+        border-radius: 10px;
+    }
+
+{% endblock style %}
+
+{% block username %}
+    {% if user.id == None %}
+        <a class="nav-link " href="{% url 'home' %}"><button type="button" class="btn btn-success">Login</button></a>
+    {% else %}
+    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+        <a class="nav-link " href="/product/userprofile/{{user.pk}}"><button type="button" class="btn btn-success">{{user.name}}</button></a>
+        <a class="nav-link " href="{% url 'logout' %}"><button type="button" class="btn btn-danger">Logout</button></a>
+    </div>
+    {% endif %}
+{% endblock username %}
+
+{% block body %}
+<div class="signupform">
+    {% if user.id == None %}
+        <a class="nav-link " href="{% url 'home' %}"><button type="button" class="btn btn-success">Login Required</button></a>
+    {% else %}
+        <h2 class="signupbanner">Connect your device</h2>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <label for="" class="inputlabel">Product ID:</label>
+            <input type="text" name="product_id" class="input">
+            <label for="" class="inputlabel">Product Code:</label>
+            <input type="text" name="product_code" class="input">
+            <input type="submit" value="Register" class="subbtn">
+
+        </form>
+    {% endif %}
+    
+  </div>
+
+{% endblock body %}
