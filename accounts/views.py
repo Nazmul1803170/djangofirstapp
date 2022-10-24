@@ -67,8 +67,59 @@ def dashboardView(req,pk):
         api_request = requests.get(api_link)
         my_json = api_request.content.decode('utf8').replace("'", '"')
         data = json.loads(my_json)
+        smoke = []
+        lpg = []
+        co = []
+        tempa = []
+        humi = []
+        realFeel  = []
+        avgGas=[]
+        ts = tl = tc = tt = th = tr = 0
+        for info in data:
+            ts += int(info['smoke'])
+            tl += int(info['lpg'])
+            tc += int(info['co'])
+            tt += float(info['temp'])
+            th += float(info['humidity'])
+            tr += float(info['heat_index'])
 
-        return render(req,'dashboard.html', {'data':data, 'user':userinfo})
+        avgGas.append(ts/int(data[0]['id']))
+        avgGas.append(tl/int(data[0]['id']))
+        avgGas.append(tc/int(data[0]['id']))
+        avgGas.append(int(tt/int(data[0]['id'])))
+        avgGas.append(int(th/int(data[0]['id'])))
+        avgGas.append(int(tr/int(data[0]['id'])))
+
+        print(avgGas[3])
+
+        for i in range(10):
+            smoke.append(data[i]['smoke'])
+            lpg.append(data[i]['lpg'])
+            co.append(data[i]['co'])
+            tempa.append(data[i]['temp'])
+            humi.append(data[i]['humidity'])
+            realFeel.append(data[i]['heat_index'])
+
+        temp = 100
+
+        return render(req,'dashboard.html', {'data':data, 'user':userinfo, 'temp':temp, 'smoke':smoke, 'lpg':lpg, 'co':co, 'avgGas':avgGas,'tempa':tempa, 'humi':humi, 'realFeel':realFeel})
+
+    else:
+        return redirect('home')
+
+def datasetView(req,pk):
+
+    userinfo = UserInfo.objects.get(pk=pk)
+    if userinfo.user == req.user:
+        product_id = userinfo.product_id
+
+        api_link = 'https://shantotech003.000webhostapp.com/esp_data_json_api.php?product_id=' + product_id
+        api_request = requests.get(api_link)
+        my_json = api_request.content.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+        temp = 100
+
+        return render(req,'dataset.html', {'data':data, 'user':userinfo, 'temp':temp})
 
     else:
         return redirect('home')

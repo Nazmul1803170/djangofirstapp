@@ -2,11 +2,11 @@
 
 {% block title %}Dashboard{% endblock title %}
 {% block head %}
-    <script>
-        window.setTimeout(function () {
-            location.href = "/accounts/dashboard/{{user.pk}}";
-        }, 15000); // refresh/redirect after 5 seconds.
-    </script>
+<script>
+    window.setTimeout(function () {
+        location.href = "/accounts/dashboard/{{user.pk}}";
+    }, 15000); // refresh/redirect after 15 seconds.
+</script>
 {% endblock head %}
 
 {% block style %}
@@ -30,6 +30,61 @@
         top: 70px;
     }
 
+    .currentGas{
+        background: #ffffffeb;
+        height: 330px;
+        width: 600px;
+        position: relative;
+        top: 110px;
+        left: 20px;
+        border: 5px solid #2c5542;
+        border-radius: 10px;
+    }
+    .currentW{
+        background: #f6f8e1f2;
+        height: 350px;
+        width: 600px;
+        position: absolute;
+        top: 510px;
+        right: 500px;
+        border: 5px solid #2c5542;
+        border-radius: 10px;
+    }
+    .whether{
+        background: #a2a4b1fa;
+        height: 330px;
+        width: 800px;
+        position: absolute;
+        top: 160px;
+        right: 20px;
+        border: 5px solid #2c5542;
+        border-radius: 10px;
+        padding:10px;
+    }
+    .wea{
+        height: 330px;
+        width: 800px;
+        position: absolute;
+        top: 510px;
+        right: -235px;
+    }
+    .pcus{
+        height:50px;
+    }
+    .avgGas{
+        height: 350px;
+        position: absolute;
+        top: 510px;
+        left: 20px;
+        /* background: red; */
+        border: 5px solid black;
+        width: 350px;
+        display: block;
+        overflow: hidden;
+        border-radius:10px;
+    }
+
+
 {% endblock style %}
 
 {% block username %}
@@ -38,6 +93,7 @@
     {% else %}
     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
         <a class="nav-link " href="/product/userprofile/{{user.pk}}"><button type="button" class="btn btn-success">{{user.name}}</button></a>
+        <a class="nav-link " href="/accounts/dataset/{{user.pk}}"><button type="button" class="btn btn-info">View Dataset</button></a>
         <a class="nav-link " href="{% url 'logout' %}"><button type="button" class="btn btn-danger">Logout</button></a>
     </div>
     {% endif %}
@@ -47,37 +103,162 @@
     <div class="userinfo">
         <h2>Dashboard</h2>
     </div>
-    <div class="datatable">
-        <table class="table  table-striped table-primary">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Raw Voltage</th>
-                <th scope="col">LPG (ppm)</th>
-                <th scope="col">CO (ppm)</th>
-                <th scope="col">Smoke (ppm)</th>
-                <th scope="col">Temp (C)</th>
-                <th scope="col">Humidity (%)</th>
-                <th scope="col">Real Feel (C)</th>
-            </tr>
-            </thead>
-            <tbody>
-                {% for info in data %}
-                    <tr>
-                        <th scope="row">{{info.id}}</th>
-                        <td>{{info.raw_voltage}}</td>
-                        <td>{{info.lpg}}</td>
-                        <td>{{info.co}}</td>
-                        <td>{{info.smoke}}</td>
-                        <td>{{info.temp}}</td>
-                        <td>{{info.humidity}}</td>
-                        <td>{{info.heat_index}}</td>
-                    </tr>
-                {% endfor %}
-            
-            
-            </tbody>
-        </table>
+    
+    <div class="currentGas">
+        <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
     </div>
+
+    <!-- Required script for line graph -->
+    <script>
+    var xValues = [1,2,3,4,5,6,7,8,9,10];
+
+    new Chart("myChart", {
+    type: "line",
+    data: {
+        labels: xValues,
+        datasets: [{ 
+        label: 'Smoke',
+        data: [{% for sm in smoke %}{{sm}},{% endfor %}],
+        borderColor: "red",
+        fill: false
+        }, { 
+        label: 'LPG',
+        data: [{% for l in lpg %}{{l}},{% endfor %}],
+        borderColor: "green",
+        fill: false
+        }, { 
+        label: 'CO',
+        data: [{% for c in co %}{{c}},{% endfor %}],
+        borderColor: "blue",
+        fill: false
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: "Current 10 record's of gas mesurement line graph"
+        }
+    }
+    });
+    </script>
+
+    <!-- Required script for pie graph -->
+    <div class="avgGas">
+        <div id="myChart1" style="width:100%; max-width:600px; height:500px;"></div>
+    </div>
+    
+
+    <script>
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+    ['Gas', 'Percentage'],
+    ['Smoke',{{avgGas.0}}],
+    ['LPG',{{avgGas.1}}],
+    ['CO',{{avgGas.2}}]
+    ]);
+
+    var options = {
+    title:'Average Percentage of total gas mesurement',
+    is3D:true
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('myChart1'));
+    chart.draw(data, options);
+    }
+    </script>
+
+    <!-- Required script for bar graph -->
+    <div class="currentW">
+        <canvas id="myChart3" style="width:100%;max-width:600px"></canvas>
+    </div>
+
+    <!-- Required script for line graph -->
+    <script>
+    var xValues = [1,2,3,4,5,6,7,8,9,10];
+
+    new Chart("myChart3", {
+    type: "line",
+    data: {
+        labels: xValues,
+        datasets: [{ 
+        label: 'Temparature',
+        data: [{% for sm in tempa %}{{sm}},{% endfor %}],
+        borderColor: "red",
+        fill: false
+        }, { 
+        label: 'Real Feel',
+        data: [{% for c in realFeel %}{{c}},{% endfor %}],
+        borderColor: "blue",
+        fill: false
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: "Current 10 record's of weather line graph"
+        }
+    }
+    });
+    </script>
+
+    <div class="whether">
+        <h3>Average Room Weather</h3>
+        <h4 align="center">Humidity:</h4>
+        <div class="progress pcus">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{avgGas.4}}" aria-valuemin="0" aria-valuemax="100" style="width: {{avgGas.4}}%"><h3>{{avgGas.4}}%</h3></div>
+        </div>
+        <h4 align="center">Temparature:</h4>
+        <div class="progress pcus">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="{{avgGas.3}}" aria-valuemin="0" aria-valuemax="100" style="width: {{avgGas.3}}%"><h3>{{avgGas.3}} <sup>o</sup>C</h3></div>
+        </div>
+        <h4 align="center">Real Feel:</h4>
+        <div class="progress pcus">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" aria-valuenow="{{avgGas.5}}" aria-valuemin="0" aria-valuemax="100" style="width: {{avgGas.5}}%"><h3>{{avgGas.5}} <sup>o</sup>C</h3></div>
+        </div>
+        
+    </div>
+
+
+    <div class="wea">
+        <canvas id="myChart4" style="width:100%;max-width:600px"></canvas>
+    </div>
+
+    <!-- Required script for line graph -->
+    <script>
+    var xValues = [1,2,3,4,5,6,7,8,9,10];
+
+    new Chart("myChart4", {
+    type: "doughnut",
+    data: {
+        labels: [
+    'Temparature',
+    'Humidity',
+    'Real Feel'
+  ],
+  datasets: [{
+    label: 'Avarage weather',
+    data: [{{avgGas.3}}, {{avgGas.4}}, {{avgGas.5}}],
+    backgroundColor: [
+      'rgb(255, 99, 132)',
+      'rgb(54, 162, 235)',
+      'rgb(255, 205, 86)'
+    ],
+    hoverOffset: 4
+  }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: "Current 10 record's of weather pie graph"
+        }
+    }
+    });
+    </script>
+
+    
+  
 
 {% endblock body %}

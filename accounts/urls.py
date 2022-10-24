@@ -9,4 +9,5 @@ urlpatterns = [
     path("logout", logoutView, name = "logout"),
     path("product", product, name = "product"),
     path("dashboard/<int:pk>", dashboardView, name = "dashboard"),
+    path("dataset/<int:pk>", datasetView, name = "dataset"),
 ]

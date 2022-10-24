@@ -54,4 +54,6 @@ def handoverview(req,pi):
 
 
 def chartview(req):
-    return render(req, 'chartview.html')
+    data = [25,10,12,0,8,20]
+    print(data)
+    return render(req, 'chartview.html',{'data':data})
